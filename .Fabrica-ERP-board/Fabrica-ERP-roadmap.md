@@ -123,6 +123,14 @@ Orchestrator uses **MCP server** for configuration and setup tasks:
 - Inspect model fields and relationships
 - Diagnose issues
 
+**MCP Server:** `uvx mcp-server-odoo` (YOLO mode, username/password auth)
+
+**Config:** `opencode.json` in project root
+
+**Available MCP tools:** `search_records`, `get_record`, `get_fields`, `get_current_context`, `list_models`, `create_record`, `update_record`, `delete_record`, `post_message`, `aggregate_records`
+
+**Rule:** Use MCP tools for implementation/development only. Do not use as end-user.
+
 ### Concurrency Handling
 
 | Scenario | How It Works |
@@ -160,4 +168,4 @@ Orchestrator uses **MCP server** for configuration and setup tasks:
 ---
 
 *Created: 2026-09-16*
-*Last updated: 2026-09-16*
+*Last updated: 2026-09-17*

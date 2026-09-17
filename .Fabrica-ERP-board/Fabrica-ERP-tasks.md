@@ -62,14 +62,14 @@ Entity (Company / Business Unit / Brand)
 
 | Metric | Value |
 |---|---|
-| Total tasks | 0 |
-| ✅ DONE | 0 |
+| Total tasks | 6 |
+| ✅ DONE | 4 |
 | 🔶 IN_PROGRESS | 0 |
 | 👀 VERIFY | 0 |
-| ⬜ TODO | 0 |
+| ⬜ TODO | 2 |
 | 🚫 BLOCKED | 0 |
 | ❌ CANCELLED | 0 |
-| Completion | 0% |
+| Completion | 67% |
 
 ---
 
@@ -79,9 +79,29 @@ Entity (Company / Business Unit / Brand)
 |---|---|
 | **Current Group** | — |
 | **Current Task** | — |
-| **Last Action** | Planning complete. All tasks moved to roadmap. |
-| **Next Action** | Refine roadmap phases |
+| **Last Action** | MCP server configured and tested successfully |
+| **Next Action** | Configure Project module stages (8 stages) |
 | **Blockers** | None |
+
+---
+
+## DONE
+
+| ID | Task | Files | Completed |
+|----|------|-------|-----------|
+| D-1 | Install PostgreSQL 18 | — | 2026-09-16 |
+| D-2 | Install Odoo 19 Community | — | 2026-09-16 |
+| D-3 | Create Fabrica-db database | — | 2026-09-16 |
+| D-4 | Configure MCP server (uvx mcp-server-odoo) | `opencode.json`, `Fabrica-ERP/mcp/config.json`, `Fabrica-ERP/AGENTS.md` | 2026-09-17 |
+
+---
+
+## TODO
+
+| ID | Task | Notes |
+|----|------|-------|
+| T-1 | Configure Project module stages (8 stages) | Backlog → Roadmap → To Do → In Progress → In Review → Blocked → Done → Cancelled |
+| T-2 | Create Fabrica-ERP project in Odoo | Use MCP tools or Odoo UI |
 
 ---
 
@@ -103,4 +123,4 @@ Entity (Company / Business Unit / Brand)
 ---
 
 *Created: 2026-09-16*
-*Last updated: 2026-09-16*
+*Last updated: 2026-09-17*

@@ -113,6 +113,8 @@ Body: {
 4. Orchestrator uses MCP server for configuration and setup.
 5. Humans use the Odoo web UI — Kanban, Gantt, list views.
 
+When working with Odoo ERP to implement or develop, use the `odoo` MCP tools. Do not use it as a user.
+
 ## Key Directories
 
 ```
