@@ -1,116 +1,163 @@
 # Fabrica ERP — Roadmap
 
-> Central command for Odoo ERP implementation. Vision/identity lives in the task file descriptions. Execution details live in `Fabrica-ERP-tasks.md`. This file tracks high-level goals and cross-cutting status.
+> A multi-entity, multi-project ERP for both humans and agents. The goal is a single system where CLI agents and humans work on the same tasks, same projects, same entities — real-time, no sync issues.
 
 ---
 
-## High-Level Goals
+## Vision
 
-> The why behind everything. Task details stay in the tasks file — this is the direction.
+Build an ERP where agents and humans are first-class citizens. Agents read and write directly to Odoo via JSON-2 API. Humans use the Odoo web UI. Both see the same data, work on the same tasks, and follow the same workflows.
 
-1. **Self-hosted Odoo 19 on Windows.** Install and configure Odoo 19 Community locally. Get the instance running, accessible, and ready for module configuration.
-2. **Configure the Project module.** Set up task stages, project templates, and the standard workflow that all other projects will use. This is the foundation — every project and task flows through here.
-3. **Create the global project structure.** One "Fabrica-Global" project for cross-project management, plus individual projects for each sub-project. Each gets its own backlog, roadmap, tasks, and DNA.
-4. **Set up agent API access.** Configure JSON-2 API endpoint, create bot users, generate API keys. Agents must be able to read and write tasks programmatically.
-5. **Configure remaining standard modules.** CRM, Sales, Accounting, Inventory, Helpdesk, HR, etc. — install and configure for our use case.
-6. **Connect n8n to Odoo.** (Future phase) Wire up n8n automation workflows that read/write Odoo data through the API.
+**Core principle:** Odoo is the source of truth. Markdown files are reference material for agents. The database is what matters.
 
 ---
 
-## Phases
+## Data Model
 
-### Phase A — Odoo Installation & Core Setup
+```
+Entity (Company / Business Unit / Brand)
+ ├── Projects
+ │    ├── Backlog      (random ideas, things to consider)
+ │    ├── Roadmap      (high-level goals, direction)
+ │    ├── Tasks        (work items: todo, in progress, done)
+ │    └── Guidelines   (redlines, greenlines, rules)
+ └── Agents
+      └── Bot users with API keys
+```
 
-| ID | Task | Status |
-|----|------|--------|
-| A1 | Install Odoo 19 on Windows (direct install, no Docker) | ⬜ TODO |
-| A2 | Install PostgreSQL on Windows | ⬜ TODO |
-| A3 | Create database, verify Odoo web UI accessible at localhost:8069 | ⬜ TODO |
-| A4 | Configure odoo.conf (admin password, addons path, proxy mode) | ⬜ TODO |
-| A5 | Install Project module and verify it loads | ⬜ TODO |
+**Entity:** Top-level org unit. Each entity owns its projects and has full data isolation.
 
-### Phase B — Project Module Configuration
+**Project:** Belongs to one entity. Has its own Backlog, Roadmap, Tasks, and Guidelines.
 
-| ID | Task | Status |
-|----|------|--------|
-| B1 | Configure 8 task stages (Backlog → Roadmap → To Do → In Progress → Review → Blocked → Done → Cancelled) | ⬜ TODO |
-| B2 | Enable task dependencies, sub-tasks, milestones in Project settings | ⬜ TODO |
-| B3 | Configure Kanban WIP limits per stage | ⬜ TODO |
-| B4 | Set up project roles (if needed for task assignment) | ⬜ TODO |
-| B5 | Verify task lifecycle: create → move through stages → done | ⬜ TODO |
+**Backlog:** Ideas and items waiting to be promoted to Roadmap or Tasks. Low-commitment holding area.
 
-### Phase C — Global Project Structure
+**Roadmap:** High-level goals and strategic direction. What are we building and why?
 
-| ID | Task | Status |
-|----|------|--------|
-| C1 | Create "Fabrica-Global" project (umbrella for all cross-project work) | ⬜ TODO |
-| C2 | Add global DNA to Fabrica-Global project description (mission, vision, values) | ⬜ TODO |
-| C3 | Create global milestones (Phase A through E gates) | ⬜ TODO |
-| C4 | Create individual Odoo projects for each sub-project (empty, no tasks yet) | ⬜ TODO |
-| C5 | Verify each project has its own independent task board | ⬜ TODO |
+**Tasks:** Actual work items. Assigned to humans or agents. Has stages, priorities, deadlines.
 
-### Phase D — Agent API Access
-
-| ID | Task | Status |
-|----|------|--------|
-| D1 | Create dedicated bot users for agents (one per agent role) | ⬜ TODO |
-| D2 | Generate API keys for each bot user | ⬜ TODO |
-| D3 | Test JSON-2 API: search_read on project.task | ⬜ TODO |
-| D4 | Test JSON-2 API: create task, write task, move stage | ⬜ TODO |
-| D5 | Document API endpoint + credentials pattern in each project's AGENTS.md | ⬜ TODO |
-| D6 | Verify agents can read tasks and update stages end-to-end | ⬜ TODO |
-
-### Phase E — Standard Modules (Future)
-
-| ID | Task | Status |
-|----|------|--------|
-| E1 | Install and configure CRM module | ⬜ TODO |
-| E2 | Install and configure Sales module | ⬜ TODO |
-| E3 | Install and configure Accounting module | ⬜ TODO |
-| E4 | Install and configure Helpdesk module | ⬜ TODO |
-| E5 | Install and configure HR module | ⬜ TODO |
+**Guidelines:** Rules, redlines, greenlines. What agents must do, must not do, and should do.
 
 ---
 
-## Dashboard
+## Fabrica Integration
 
-> Updated as tasks complete.
+Fabrica-ERP syncs with the Fabrica desktop app. Entities and projects come from Fabrica's data model — no duplicate entry.
 
-| Phase | Total | Done | In Progress | TODO | Completion |
-|-------|-------|------|-------------|------|------------|
-| A — Odoo Installation | 5 | 0 | 0 | 5 | 0% |
-| B — Project Module Config | 5 | 0 | 0 | 5 | 0% |
-| C — Global Project Structure | 5 | 0 | 0 | 5 | 0% |
-| D — Agent API Access | 6 | 0 | 0 | 6 | 0% |
-| E — Standard Modules | 5 | 0 | 0 | 5 | 0% |
-| **Total** | **26** | **0** | **0** | **26** | **0%** |
+**Data source:** `%APPDATA%\Fabrica\profiles\local-default\fabrica-data.json`
+
+**Mapping:**
+| Fabrica | ERP | Direction |
+|---------|-----|-----------|
+| Project Group | Entity | Fabrica → ERP |
+| FolderWorkspace | Project | Fabrica → ERP |
+| `folderPath` | Project folder path | Fabrica → ERP |
+
+**Sync behavior:**
+- **Manual trigger** — User clicks "Sync" button in ERP to pull from Fabrica
+- **One-way** — Fabrica is source of truth for structure (entities, projects)
+- **Archive on delete** — When entity/project is deleted in Fabrica, it gets archived in ERP (not deleted)
+- **Restore on re-add** — When entity/project is re-added in Fabrica, it restores from ERP archive
+
+**Folder structure:**
+```
+<folderPath>/
+├── AGENTS.md    # Auto-created if missing (entity or project version)
+└── README.md    # Auto-created if missing (task added to generate it)
+```
+
+**AGENTS.md auto-creation:**
+- Check if exists in entity/project folder
+- If not: create from preset template with entity/project names filled in
+- Two versions: entity-level and project-level
+- Last line: "Read README.md for project description"
+
+**README.md auto-creation:**
+- Check if exists in entity/project folder
+- If yes: do nothing
+- If no: add first task to project's task list to generate it
 
 ---
 
-## Current Focus
+## Disk Layout
 
-> What runs NOW.
+Each entity gets a folder. Inside it, each project gets a subfolder. These files are **reference material for agents** — not the source of truth (Odoo DB is).
 
-| Phase | What | Why |
-|-------|------|-----|
-| **A** | Install Odoo 19 + PostgreSQL on Windows | Foundation — nothing works without the instance |
+```
+<workspacePath>/
+├── Fabrica/                      # Entity folder (from Fabrica Project Group)
+│   ├── AGENTS.md                 # Entity-level agent instructions (auto-created)
+│   ├── README.md                 # Entity description
+│   └── Fabrica-app/              # Project folder (from Fabrica FolderWorkspace)
+│       ├── AGENTS.md             # Project agent instructions (auto-created)
+│       └── README.md             # Project description
+│   └── Fabrica-web/
+│       ├── AGENTS.md
+│       └── README.md
+```
+
+**Why in workspace folders:** Agents already work in these folders. AGENTS.md and README.md are where agents look for context. No separate ERP directory needed.
 
 ---
 
-## Next Actions
+## Agent ↔ ERP Integration
 
-| # | What | Depends on | Status |
-|---|------|-----------|--------|
-| 1 | Download Odoo 19 Windows installer | — | ⬜ TODO |
-| 2 | Download PostgreSQL Windows installer | — | ⬜ TODO |
-| 3 | Install both, create database, verify UI | — | ⬜ TODO |
-| 4 | Configure task stages in Project module | #3 done | ⬜ TODO |
-| 5 | Create Fabrica-Global project | #4 done | ⬜ TODO |
-| 6 | Create bot users + API keys | #3 done | ⬜ TODO |
-| 7 | Test API end-to-end from agent | #6 done | ⬜ TODO |
+### How Agents Work
+
+Agents use **JSON-2 API directly** — no MCP overhead. Simple HTTP calls to Odoo.
+
+| Action | Method | Endpoint |
+|--------|--------|----------|
+| List tasks | `search_read` | `POST /json/2/project.task/search_read` |
+| Create task | `create` | `POST /json/2/project.task/create` |
+| Update task | `write` | `POST /json/2/project.task/write` |
+| Read guidelines | `search_read` | `POST /json/2.note.note/search_read` |
+| Read roadmap | `search_read` | `POST /json/2.project.project/search_read` |
+
+**Auth:** Each agent is a bot user with its own API key. Bearer token in header.
+
+### How Orchestrator Works
+
+Orchestrator uses **MCP server** for configuration and setup tasks:
+- Install/configure modules
+- Create projects and entities
+- Inspect model fields and relationships
+- Diagnose issues
+
+### Concurrency Handling
+
+| Scenario | How It Works |
+|----------|--------------|
+| **Agent vs Agent** | Agent claims task by moving stage to "In Progress". Second agent sees it's taken, picks another. Odoo's PostgreSQL handles atomic writes. |
+| **Human vs Human** | Odoo's built-in record locking. Kanban drag-and-drop is atomic. Multiple humans can work on different tasks simultaneously. |
+| **Agent vs Human** | Same API, same UI. If human moves a task while agent is reading, agent re-reads on next API call. No stale data — agents always fetch fresh state before acting. |
+
+**Claim protocol:** Agent reads task → checks stage is not "In Progress" or "Done" → moves to "In Progress" → does work → moves to "Done". If stage changed during work, agent re-evaluates.
+
+---
+
+## Odoo Apps
+
+### Installed
+| Module | Purpose |
+|--------|---------|
+| **Project** | Core task management. Stages, dependencies, milestones. |
+| **Discuss** | Messaging between agents and humans. Notifications, updates, threads. |
+
+### Future (as needed)
+| Module | Purpose |
+|--------|---------|
+| **Notes** | Guidelines, rules, redlines. Each entity/project can have note records as guidelines. |
+| **Contacts** | Entity and contact management. Companies, people, relationships. |
+| **Calendar** | Scheduling, deadlines, milestones. Visual timeline view. |
+| **Documents** | File attachments, specs, design docs. Linked to projects/tasks. |
+| **Helpdesk** | Support tickets, issues, bugs. Separate workflow from project tasks. |
+| **CRM** | Leads, opportunities, pipeline. For entities that do sales. |
+| **Sales** | Quotations, orders. For entities that sell products/services. |
+| **Accounting** | Invoicing, financials. For entities that need billing. |
+| **HR** | People, departments, roles. For entities with employees. |
+| **Website** | External-facing portal. For entities that need a public site. |
 
 ---
 
 *Created: 2026-09-16*
 *Last updated: 2026-09-16*
-*Status: Planning — Odoo 19 on Windows, no Docker*

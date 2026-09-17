@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "odoo": {
+      "command": "uvx",
+      "args": ["mcp-server-odoo"],
+      "env": {
+        "ODOO_URL": "http://localhost:8069",
+        "ODOO_DB": "Fabrica-db",
+        "ODOO_USER": "autoscalers.admin@gmail.com",
+        "ODOO_PASSWORD": "SAHacke.01",
+        "ODOO_YOLO": "true"
+      }
+    }
+  }
+}
